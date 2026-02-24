@@ -1,5 +1,7 @@
 <?php
 date_default_timezone_set('UTC');
+
+// Show errors (turn OFF in production later)
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
@@ -7,35 +9,36 @@ ini_set('display_errors', 1);
 |--------------------------------------------------------------------------
 | DATABASE CONFIGURATION
 |--------------------------------------------------------------------------
-| If running locally → use XAMPP values
-| If running in cloud (Render) → use Environment Variables
+| If Railway environment variables exist → use them
+| Otherwise → use local XAMPP config
 */
 
 if (getenv('DB_HOST')) {
-    // 🌍 CLOUD (Render / Production)
-    define('DB_SERVER', getenv('DB_HOST'));
-    define('DB_USERNAME', getenv('DB_USER'));
-    define('DB_PASSWORD', getenv('DB_PASS'));
-    define('DB_NAME', getenv('DB_NAME'));
-    define('DB_PORT', getenv('DB_PORT') ?: 3306);
+    // 🌍 Railway (Cloud)
+    $host = getenv('DB_HOST');
+    $user = getenv('DB_USER');
+    $pass = getenv('DB_PASS');
+    $db   = getenv('DB_NAME');
+    $port = getenv('DB_PORT') ?: 3306;
 } else {
-    // 💻 LOCAL (XAMPP)
-    define('DB_SERVER', '127.0.0.1');
-    define('DB_USERNAME', 'root');
-    define('DB_PASSWORD', '');
-    define('DB_NAME', 'intercollege_meet_app');
-    define('DB_PORT', 3307);
+    // 💻 Local (XAMPP)
+    $host = '127.0.0.1';
+    $user = 'root';
+    $pass = '';
+    $db   = 'intercollege_meet_app';
+    $port = 3307;
 }
 
-// --- Establish Connection ---
-$conn = new mysqli(DB_SERVER, DB_USERNAME, DB_PASSWORD, DB_NAME, DB_PORT);
+// Create connection
+$conn = new mysqli($host, $user, $pass, $db, $port);
 
+// Check connection
 if ($conn->connect_error) {
     die("Database connection failed: " . $conn->connect_error);
 }
 
-// --- Start Session ---
-if (session_status() == PHP_SESSION_NONE) {
+// Start session
+if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 ?>
