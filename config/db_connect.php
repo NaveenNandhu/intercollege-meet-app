@@ -1,25 +1,19 @@
 <?php
 date_default_timezone_set('UTC');
 
-/*
-|--------------------------------------------------------------------------
-| Railway Production Variables
-|--------------------------------------------------------------------------
-*/
+if (getenv('DATABASE_URL')) {
 
-$host = getenv('MYSQLHOST');
-$user = getenv('MYSQLUSER');
-$pass = getenv('MYSQLPASSWORD');
-$db   = getenv('MYSQLDATABASE');
-$port = getenv('MYSQLPORT');
+    $url = parse_url(getenv('DATABASE_URL'));
 
-/*
-|--------------------------------------------------------------------------
-| Fallback for Local XAMPP
-|--------------------------------------------------------------------------
-*/
+    $host = $url['host'];
+    $user = $url['user'];
+    $pass = $url['pass'];
+    $db   = ltrim($url['path'], '/');
+    $port = $url['port'];
 
-if (!$host) {
+} else {
+
+    // Local XAMPP fallback
     $host = "127.0.0.1";
     $user = "root";
     $pass = "";
