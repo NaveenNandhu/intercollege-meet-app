@@ -12,23 +12,23 @@ ini_set('display_errors', 1);
 | If Railway environment variables exist → use them
 | Otherwise → use local XAMPP config
 */
+if (getenv('MYSQLHOST')) {
 
-if (getenv('DB_HOST')) {
-    // 🌍 Railway (Cloud)
-    $host = getenv('DB_HOST');
-    $user = getenv('DB_USER');
-    $pass = getenv('DB_PASS');
-    $db   = getenv('DB_NAME');
-    $port = getenv('DB_PORT') ?: 3306;
+    define('DB_SERVER', getenv('MYSQLHOST'));
+    define('DB_USERNAME', getenv('MYSQLUSER'));
+    define('DB_PASSWORD', getenv('MYSQLPASSWORD'));
+    define('DB_NAME', getenv('MYSQLDATABASE'));
+    define('DB_PORT', getenv('MYSQLPORT') ?: 3306);
+
 } else {
-    // 💻 Local (XAMPP)
-    $host = '127.0.0.1';
-    $user = 'root';
-    $pass = '';
-    $db   = 'intercollege_meet_app';
-    $port = 3307;
-}
 
+    // Local XAMPP
+    define('DB_SERVER', '127.0.0.1');
+    define('DB_USERNAME', 'root');
+    define('DB_PASSWORD', '');
+    define('DB_NAME', 'intercollege_meet_app');
+    define('DB_PORT', 3307);
+}
 // Create connection
 $conn = new mysqli($host, $user, $pass, $db, $port);
 
