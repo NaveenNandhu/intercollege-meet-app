@@ -1,25 +1,17 @@
 <?php
-date_default_timezone_set('UTC');
 
-$url = getenv('DATABASE_URL');
+$host = getenv("DB_HOST") ?: "127.0.0.1";
+$port = getenv("DB_PORT") ?: "3307";
+$user = getenv("DB_USER") ?: "root";
+$pass = getenv("DB_PASS") ?: "";
+$dbname = getenv("DB_NAME") ?: "intercollege_meet";
 
-if (!$url) {
-    die("DATABASE_URL not found.");
-}
-
-$dbparts = parse_url($url);
-
-$host = $dbparts['host'];
-$user = $dbparts['user'];
-$pass = $dbparts['pass'];
-$db   = ltrim($dbparts['path'], '/');
-$port = $dbparts['port'];
-
-$conn = new mysqli($host, $user, $pass, $db, (int)$port);
+$conn = new mysqli($host, $user, $pass, $dbname, (int)$port);
 
 if ($conn->connect_error) {
-    die("Database connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-session_start();
+$conn->set_charset("utf8mb4");
+
 ?>
